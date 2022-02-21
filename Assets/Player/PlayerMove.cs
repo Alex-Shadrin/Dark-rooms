@@ -5,12 +5,14 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     private Animator animator;
-    private Rigidbody rigidbody;
+    private new Rigidbody rigidbody;
     public float rotationSpeed = 10f;
     public float speed = 3f;
     private Camera _camera;
     int isWalkingHash;
     int isRunningHash;
+    public float lookspeed = 1f;
+
 
     void Start()
     {
@@ -22,6 +24,8 @@ public class PlayerMove : MonoBehaviour
         isRunningHash = Animator.StringToHash("isRunning");
     }
 
+    
+
     void Update()
     {
         //bool isRunning = animator.GetBool(isRunningHash);
@@ -29,7 +33,7 @@ public class PlayerMove : MonoBehaviour
         //bool forwardPressed = Input.GetKey("w");
         //bool runPressed = Input.GetKey("left shift");
 
-        //if(!isWalking && forwardPressed)
+        //if (!isWalking && forwardPressed)
         //{
         //    animator.SetBool(isWalkingHash, true);
         //}
@@ -55,18 +59,29 @@ public class PlayerMove : MonoBehaviour
         if (derectionVector.magnitude > Mathf.Abs(0.05f))
 
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(derectionVector), Time.deltaTime * rotationSpeed);
-        animator.SetFloat("speed", Vector3.ClampMagnitude(derectionVector, 2).magnitude);
+        animator.SetFloat("speed", Vector3.ClampMagnitude(derectionVector, 1).magnitude);
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            //animator.SetFloat("speed_run", Vector3.ClampMagnitude(derectionVector, 2).magnitude);
             speed = 5f;
+            animator.SetFloat("speed", Vector3.ClampMagnitude(derectionVector, 2).magnitude);
+            rigidbody.velocity = Vector3.ClampMagnitude(derectionVector, 2) * speed;
         }
         else
         {
             speed = 3f;
         }
         rigidbody.velocity = Vector3.ClampMagnitude(derectionVector, 1) * speed;
-    }
 
-}
+        //заставляет персонажа следить за курсором мышки
+        Plane playerPlane = new Plane(Vector3.up, transform.position);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float hitdist = 0;
+        if (playerPlane.Raycast(ray, out hitdist))
+        {
+            Vector3 targetPoint = ray.GetPoint(hitdist);
+            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookspeed * Time.deltaTime);
+        }
+    }
+}   

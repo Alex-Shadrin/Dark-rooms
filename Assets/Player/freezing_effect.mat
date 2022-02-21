@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_New Shader Graph
+  m_Name: freezing_effect
   m_Shader: {fileID: -6465566751694194690, guid: a4dc63864029dd4418418fd28f0724e9, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -45,6 +45,7 @@ Material:
     - Vector1_6f9569261aa34eb0a48d84e408307c36: 100
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Sides: 93
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &8516163433213428396
